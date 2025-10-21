@@ -1,14 +1,19 @@
-# Use official n8n image
 FROM n8nio/n8n:latest
 
-# Install any additional packages if needed
-# RUN apt-get update && apt-get install -y \
-#     some-package \
-#     && rm -rf /var/lib/apt/lists/*
+# Install system dependencies
+USER root
+RUN apt-get update && apt-get install -y \
+    curl \
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get clean
+USER node
 
-# Expose n8n port
-EXPOSE 5678
+# Create custom config directory with proper permissions
+RUN mkdir -p /home/node/.n8n/config && \
+    chmod 700 /home/node/.n8n/config
 
 # Health check
-HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+HEALTHCHECK --interval=30s --timeout=10s --start-period=120s --retries=3 \
     CMD curl -f http://localhost:5678/healthz || exit 1
+
+EXPOSE 5678

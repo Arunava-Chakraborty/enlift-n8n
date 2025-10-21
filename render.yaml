@@ -1,4 +1,3 @@
-# render.yaml
 services:
   - type: web
     name: n8n
@@ -22,4 +21,22 @@ services:
           type: web
           name: n8n
           envVarKey: RENDER_EXTERNAL_URL
+      # Fix for proxy issues
+      - key: N8N_TRUST_PROXY
+        value: "true"
+      # Memory optimization
+      - key: NODE_OPTIONS
+        value: "--max-old-space-size=384"
+      # Fix deprecation warnings
+      - key: DB_SQLITE_POOL_SIZE
+        value: "1"
+      - key: N8N_RUNNERS_ENABLED
+        value: "true"
+      - key: N8N_BLOCK_ENV_ACCESS_IN_NODE
+        value: "false"
+      - key: N8N_GIT_NODE_DISABLE_BARE_REPOS
+        value: "true"
+      # Security
+      - key: N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS
+        value: "true"
     plan: free
